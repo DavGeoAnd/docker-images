@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  telegraf-otel-metrics:
+    image: dgandalcio/telegraf-otel-metrics:latest
+    container_name: telegraf-otel-metrics
+    hostname: docker-local
+    ports:
+      - "4317"
+    networks:
+      - develop-bridge-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+
+networks:
+  develop-bridge-network:
+    name: develop-bridge
+    external: true
