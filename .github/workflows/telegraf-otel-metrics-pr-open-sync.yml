@@ -41,6 +41,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7} .
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7} ./telegraf/metrics/
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7}
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
