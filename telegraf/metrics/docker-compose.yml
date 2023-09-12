@@ -6,6 +6,7 @@ services:
     hostname: docker-local
     ports:
       - "4317"
+      - "14317:14317"
     networks:
       - develop-bridge-network
     deploy:
