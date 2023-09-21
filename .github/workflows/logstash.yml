@@ -39,6 +39,6 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7} ./logstash/
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7}
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF_NAME}-${GITHUB_SHA::7} ./logstash/
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF_NAME}-${GITHUB_SHA::7}
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_REF_NAME}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
