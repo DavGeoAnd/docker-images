@@ -1,0 +1,44 @@
+name: Push custom logstash image to ECR
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - logstash/Dockerfile
+      - logstash/pipelines.yml
+      - logstash/*.conf
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: logstash
+
+jobs:
+  push_to_ecr:
+    name: Push Image to ECR
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Creds
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7} ./logstash/
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7}
+          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:${GITHUB_HEAD_REF}-${GITHUB_SHA::7}" >> $GITHUB_OUTPUT

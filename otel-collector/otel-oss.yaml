@@ -1,0 +1,44 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+
+processors:
+  batch:
+
+exporters:
+  elasticsearch:
+    endpoints: [http://elasticsearch:9200]
+    logs_index: service_logs
+    mapping:
+      mode: "no"
+    sending_queue:
+      enabled: true
+      num_consumers: 20
+      queue_size: 1000
+  influxdb:
+    endpoint: http://influxdb:8086
+    org: davgeoand
+    bucket: service
+    token: 16aleI17fzCK2eqvEb8mNFFb5jK4i9KWOjK-9XkzmIwyU9vzNyAQxxI6jB-Umuj2j94Nmve0sbq7skzFO0-DEQ==
+    metrics_schema: telegraf-prometheus-v1
+    sending_queue:
+      enabled: true
+      num_consumers: 3
+      queue_size: 10
+    retry_on_failure:
+      enabled: true
+      initial_interval: 1s
+      max_interval: 3s
+      max_elapsed_time: 10s
+
+service:
+  pipelines:
+    logs:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ elasticsearch ]
+    metrics:
+      receivers: [ otlp ]
+      processors: [ batch ]
+      exporters: [ influxdb ]

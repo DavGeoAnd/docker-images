@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  telegraf-otel-logs:
+    build: .
+    container_name: telegraf-otel-logs
+    hostname: docker-local
+    ports:
+      - "4317"
+      - "14317:14317"
+    networks:
+      - develop-bridge-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 512M
+
+networks:
+  develop-bridge-network:
+    name: develop-bridge
+    external: true
