@@ -1,5 +1,6 @@
 FROM logstash:8.10.1
 
+# Copy config files
 COPY pipelines.yml /usr/share/logstash/config/pipelines.yml
 COPY service_logs.conf /usr/share/logstash/pipeline/service_logs.conf
 
